@@ -1,32 +1,26 @@
-# ---- Stage 1: Build the App ----
-FROM node:18-alpine AS builder
+# Stage 1: Build the application
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
+COPY . .
 RUN npm install
 
-# Copy all source code
-COPY . .
-
-# Rebuild esbuild for Alpine if needed
-RUN npm rebuild esbuild
-
-# Build the React app
+# Compile the app
 RUN npm run build
 
+# Stage 2: Serve with NGINX
+FROM nginx:alpine
 
-# ---- Stage 2: Serve with NGINX ----
-FROM nginx:alpine AS runner
+# Install bash (optional, but used in some base images)
+RUN apk add --no-cache bash
 
-# Copy build output to NGINX's web root
+# Copy built frontend
 COPY --from=builder /app/dist /usr/share/nginx/html
 
-# Replace default nginx config with custom one
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+# Custom NGINX config
+COPY nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
 
-# Start NGINX
 CMD ["nginx", "-g", "daemon off;"]
