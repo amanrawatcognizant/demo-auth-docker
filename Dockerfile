@@ -1,4 +1,4 @@
-# Stage 1: Build the application
+# Stage 1: Build the application.
 FROM node:22-alpine AS builder
 
 WORKDIR /app
