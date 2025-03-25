@@ -16,11 +16,11 @@ jobs:
       - name: Log in to ACR
         uses: docker/login-action@v2
         with:
-          registry: acrnsa.azurecr.io
+          registry: stabilityreport.azurecr.io
           username: ${{ secrets.ACR_USERNAME }}
           password: ${{ secrets.ACR_PASSWORD }}
 
       - name: Build and push Docker image
         run: |
-          docker build -t acrnsa.azurecr.io/react-app:latest .
-          docker push acrnsa.azurecr.io/react-app:latest
+          docker build -t stabilityreport.azurecr.io/react-app:latest .
+          docker push stabilityreport.azurecr.io/react-app:latest
